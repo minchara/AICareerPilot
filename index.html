@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI CareerPilot - AI-Powered Interview Preparation & Mock Interview System</title>
+  <meta name="description" content="Production-quality AI-powered interview preparation platform with resume analysis, adaptive mock interviews, and personalized roadmaps.">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js for Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .gradient-text {
+      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- TOP NOTIFICATION BANNER -->
+  <div id="demo-banner" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs md:text-sm font-medium py-2 px-4 text-center flex items-center justify-between shadow-sm">
+    <div class="flex-1 text-center flex items-center justify-center gap-2">
+      <span>🎯 <strong>Interactive Live Demo:</strong> Complete AI Interview Preparation System with built-in embedded database.</span>
+    </div>
+    <button onclick="document.getElementById('demo-banner').style.display='none'" class="text-white/80 hover:text-white">&times;</button>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="bg-white/95 backdrop-blur border-b border-slate-200 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('landing')">
+        <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i data-lucide="briefcase" class="h-5 w-5"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight text-slate-900">AI <span class="text-blue-600">CareerPilot</span></span>
+          <span class="hidden md:inline-block ml-2 text-[10px] font-semibold uppercase tracking-wider bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">BTech CSE SaaS</span>
+        </div>
+      </div>
+
+      <!-- Nav Items -->
+      <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-600">
+        <button onclick="navigateTo('landing')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Home</button>
+        <button onclick="navigateTo('dashboard')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Dashboard</button>
+        <button onclick="navigateTo('resume')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Resume Analyzer</button>
+        <button onclick="navigateTo('jobs')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Job Match</button>
+        <button onclick="navigateTo('interview')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Mock Interview</button>
+        <button onclick="navigateTo('questions')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Question Bank</button>
+        <button onclick="navigateTo('roadmap')" class="px-3 py-2 rounded-lg hover:text-blue-600 hover:bg-slate-50 transition">Roadmap</button>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button onclick="navigateTo('interview')" class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-sm shadow-blue-600/20 transition flex items-center gap-2">
+          <i data-lucide="play" class="h-4 w-4"></i>
+          <span>Launch Demo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION CONTAINER -->
+  <main class="flex-1">
+
+    <!-- 1. LANDING PAGE VIEW -->
+    <section id="view-landing" class="block animate-fade-in">
+      <!-- Hero -->
+      <div class="relative overflow-hidden bg-gradient-to-b from-blue-50/50 via-white to-slate-50 py-16 md:py-24 border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100/70 text-blue-700 text-xs font-semibold mb-6">
+            <i data-lucide="sparkles" class="h-3.5 w-3.5"></i>
+            Production-Ready AI Interview Preparation Platform
+          </div>
+          <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight mb-6">
+            Land Your Dream Software Role With <span class="gradient-text">AI CareerPilot</span>
+          </h1>
+          <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8 leading-relaxed">
+            Upload your resume, analyze skill gaps against job descriptions, practice with adaptive AI mock interviews, and receive multi-criteria STAR feedback in real time.
+          </p>
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <button onclick="navigateTo('dashboard')" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-blue-600/25 flex items-center gap-2 transition transform active:scale-95">
+              <i data-lucide="layout-dashboard" class="h-5 w-5"></i> Open Dashboard
+            </button>
+            <button onclick="navigateTo('resume')" class="bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-semibold px-6 py-3.5 rounded-xl shadow-sm flex items-center gap-2 transition">
+              <i data-lucide="file-text" class="h-5 w-5"></i> Analyze Resume
+            </button>
+            <button onclick="navigateTo('interview')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg shadow-emerald-600/25 flex items-center gap-2 transition">
+              <i data-lucide="message-square" class="h-5 w-5"></i> Start Mock Interview
+            </button>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 max-w-4xl mx-auto">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-3xl font-bold text-blue-600">200+</div>
+              <div class="text-xs text-slate-500 font-medium mt-1">Curated CSE Questions</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-3xl font-bold text-purple-600">14+</div>
+              <div class="text-xs text-slate-500 font-medium mt-1">Technical Domains</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-3xl font-bold text-emerald-600">100%</div>
+              <div class="text-xs text-slate-500 font-medium mt-1">Client-Side Persistence</div>
+            </div>
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="text-3xl font-bold text-amber-600">STAR</div>
+              <div class="text-xs text-slate-500 font-medium mt-1">Behavioral Scoring</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Grid -->
+      <div class="max-w-7xl mx-auto px-4 py-16">
+        <h2 class="text-2xl md:text-3xl font-bold text-center text-slate-900 mb-12">Core Capabilities</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="h-12 w-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4">
+              <i data-lucide="file-check" class="h-6 w-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Resume ATS Intelligence</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Analyzes keyword density, extraction vectors, project impact, and calculates a realistic ATS score with prioritized critiques.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="h-12 w-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center mb-4">
+              <i data-lucide="bot" class="h-6 w-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Adaptive AI Interviewer</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Dynamically presents Technical, Behavioral, and Coding problems, evaluating relevance, accuracy, and depth in real-time.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
+            <div class="h-12 w-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center mb-4">
+              <i data-lucide="map" class="h-6 w-6"></i>
+            </div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Weekly Mastery Roadmap</h3>
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Synthesizes resume deficits and interview mistakes into a tailored 4-week structured curriculum with interactive tracking.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. DASHBOARD VIEW -->
+    <section id="view-dashboard" class="hidden p-4 md:p-8 max-w-7xl mx-auto space-y-6">
+      <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-6 md:p-8 text-white shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur rounded-full text-xs font-semibold mb-2">Target Role: Full Stack Software Engineer</span>
+            <h2 class="text-2xl md:text-3xl font-bold">Welcome back, <span id="dash-user-name">Alex Morgan</span>! 👋</h2>
+            <p class="text-blue-100 text-sm mt-1 max-w-xl">Your interview readiness is progressing steadily. Master Dynamic Programming and System Design to reach top percentile.</p>
+          </div>
+          <div class="flex gap-3">
+            <button onclick="navigateTo('interview')" class="bg-white text-blue-600 hover:bg-blue-50 font-bold px-4 py-2.5 rounded-xl shadow text-sm transition">Start Mock Session</button>
+            <button onclick="navigateTo('roadmap')" class="bg-white/20 hover:bg-white/30 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition">View Roadmap</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Score Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Resume ATS Score</div>
+            <div class="text-3xl font-extrabold text-blue-600 mt-1">78 / 100</div>
+            <div class="text-xs text-slate-500 mt-1">High keyword match in Web Dev</div>
+          </div>
+          <div class="h-14 w-14 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-lg">78%</div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Interview Readiness</div>
+            <div class="text-3xl font-extrabold text-emerald-600 mt-1">82 / 100</div>
+            <div class="text-xs text-slate-500 mt-1">Strong technical articulation</div>
+          </div>
+          <div class="h-14 w-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-lg">82%</div>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold uppercase tracking-wider text-slate-500">Recent Mock Score</div>
+            <div class="text-3xl font-extrabold text-purple-600 mt-1">84%</div>
+            <div class="text-xs text-slate-500 mt-1">Mixed Tech & Behavioral</div>
+          </div>
+          <div class="h-14 w-14 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-lg">84%</div>
+        </div>
+      </div>
+
+      <!-- Charts & Skills -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-slate-900 text-base">Performance Trajectory</h3>
+            <span class="text-xs text-slate-500">Last 5 Mock Interviews</span>
+          </div>
+          <div class="h-64">
+            <canvas id="scoreChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-slate-900 text-base">Priority Skill Gaps</h3>
+          <p class="text-xs text-slate-500">Skills frequently demanded for your target role that are missing from your resume:</p>
+          <div class="flex flex-wrap gap-2 pt-2">
+            <span class="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-medium">System Design</span>
+            <span class="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-medium">Docker / K8s</span>
+            <span class="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-medium">Redis Caching</span>
+            <span class="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-medium">GraphQL APIs</span>
+            <span class="px-3 py-1 bg-red-50 text-red-700 border border-red-200 rounded-full text-xs font-medium">CI/CD Pipelines</span>
+          </div>
+          <div class="pt-4 border-t border-slate-100">
+            <button onclick="navigateTo('roadmap')" class="w-full text-center text-xs font-semibold text-blue-600 hover:text-blue-700">Open Customized Study Plan &rarr;</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. RESUME ANALYZER VIEW -->
+    <section id="view-resume" class="hidden p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm">
+        <h2 class="text-2xl font-bold text-slate-900 mb-2">AI Resume Analyzer & ATS Scorer</h2>
+        <p class="text-sm text-slate-600 mb-6">Upload or paste your resume text to evaluate keyword matching, ATS layout compliance, and extract core technical competencies.</p>
+        
+        <div class="border-2 border-dashed border-slate-300 rounded-2xl p-8 text-center hover:border-blue-500 transition cursor-pointer bg-slate-50" onclick="document.getElementById('resume-file').click()">
+          <i data-lucide="upload-cloud" class="h-10 w-10 text-blue-600 mx-auto mb-2"></i>
+          <p class="text-sm font-semibold text-slate-700">Click to upload PDF or DOCX resume (Simulated)</p>
+          <p class="text-xs text-slate-500 mt-1">Or edit the resume text below to test dynamically</p>
+          <input type="file" id="resume-file" class="hidden" onchange="simulateResumeUpload()">
+        </div>
+
+        <div class="mt-6">
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Resume Content</label>
+          <textarea id="resume-text" rows="6" class="w-full p-3.5 border border-slate-300 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">Alex Morgan - BTech Computer Science.
+Skills: JavaScript, TypeScript, React, Next.js, Node.js, PostgreSQL, Prisma, Python, Git, REST APIs.
+Projects: 
+1. Full-Stack E-Commerce Web App: Built using Next.js & PostgreSQL with Stripe payment integration.
+2. Realtime Chat Application: Implemented Socket.io and Express.js supporting 50 concurrent rooms.</textarea>
+        </div>
+
+        <div class="mt-4 flex justify-end">
+          <button onclick="analyzeResumeText()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm transition">Analyze Resume</button>
+        </div>
+      </div>
+
+      <!-- Analysis Results Card -->
+      <div id="resume-results" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex items-center justify-between border-b pb-4">
+          <div>
+            <span class="text-xs font-semibold text-slate-500 uppercase">Analysis Outcome</span>
+            <h3 class="text-xl font-bold text-slate-900">ATS Match Score: <span class="text-blue-600">78 / 100</span></h3>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-3 py-1 rounded-full">Good Candidate Fit</span>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-1.5"><i data-lucide="check-circle" class="h-4 w-4 text-emerald-600"></i> Identified Technical Skills</h4>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">JavaScript</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">TypeScript</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">React</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">Next.js</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">Node.js</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">PostgreSQL</span>
+              <span class="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg text-xs font-medium">Python</span>
+            </div>
+          </div>
+
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 mb-2 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="h-4 w-4 text-amber-500"></i> Recommended Additions</h4>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">System Design</span>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">Docker</span>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">AWS / Cloud</span>
+              <span class="px-2.5 py-1 bg-amber-50 text-amber-700 rounded-lg text-xs font-medium">CI/CD Pipeline</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+          <h4 class="text-xs font-bold uppercase text-slate-600 mb-2">Priority Improvement Actions</h4>
+          <ul class="text-xs text-slate-600 space-y-1.5 list-disc pl-4">
+            <li><strong>Quantify Metrics:</strong> Add measurable outcomes in project bullets (e.g. <em>"improved load times by 40%"</em> instead of <em>"worked on UI"</em>).</li>
+            <li><strong>DevOps Exposure:</strong> Mention containerization (Docker) and automated unit testing tools (Vitest/Jest).</li>
+            <li><strong>Formatting:</strong> Maintain consistent date hierarchy (Month Year – Month Year) across all entries.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. JOB DESCRIPTION MATCHER VIEW -->
+    <section id="view-jobs" class="hidden p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+      <div class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <h2 class="text-2xl font-bold text-slate-900">Job Description Skill Gap Matrix</h2>
+        <p class="text-sm text-slate-600">Paste a target job posting below to compute required vs. candidate skills and discover missing competencies.</p>
+        
+        <div>
+          <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Job Description</label>
+          <textarea id="jd-input" rows="5" class="w-full p-3 border border-slate-300 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">Looking for a Software Development Engineer with experience in React, TypeScript, Node.js, and SQL. Candidate should have familiarity with Docker, Redis caching, AWS cloud deployments, and designing resilient RESTful APIs.</textarea>
+        </div>
+
+        <div class="flex justify-end">
+          <button onclick="compareJobDescription()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm transition">Analyze Match</button>
+        </div>
+      </div>
+
+      <!-- JD Match Outcome Card -->
+      <div id="jd-result" class="bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-xs font-semibold text-slate-500 uppercase">Match Percentage</span>
+            <h3 class="text-2xl font-bold text-slate-900">Role Compatibility: <span class="text-emerald-600">68%</span></h3>
+          </div>
+          <button onclick="navigateTo('interview')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-4 py-2 rounded-xl transition">Practice This Role &rarr;</button>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <div class="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+            <h4 class="text-sm font-bold text-emerald-800 mb-2">Matched Competencies (Resume)</h4>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-medium">React</span>
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-medium">TypeScript</span>
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-medium">Node.js</span>
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-medium">SQL (PostgreSQL)</span>
+              <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-lg text-xs font-medium">RESTful APIs</span>
+            </div>
+          </div>
+
+          <div class="p-4 bg-red-50/50 rounded-2xl border border-red-100">
+            <h4 class="text-sm font-bold text-red-800 mb-2">Missing Prerequisites</h4>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Docker</span>
+              <span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">Redis Caching</span>
+              <span class="px-2.5 py-1 bg-red-100 text-red-800 rounded-lg text-xs font-medium">AWS Cloud Deployments</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. MOCK INTERVIEW VIEW -->
+    <section id="view-interview" class="hidden p-4 md:p-8 max-w-4xl mx-auto space-y-6">
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Live Mock Interview</span>
+          <h2 class="text-lg md:text-xl font-bold text-slate-900" id="interview-role-display">Software Engineer (Full Stack)</h2>
+        </div>
+        <div class="flex items-center gap-3">
+          <span id="interview-timer" class="px-3 py-1 bg-slate-100 text-slate-700 font-mono text-xs rounded-lg font-bold">14:52</span>
+          <span id="interview-progress-pill" class="px-3 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded-lg">Question 1 of 3</span>
+        </div>
+      </div>
+
+      <!-- AI Question Bubble -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-start gap-4">
+          <div class="h-10 w-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0">
+            <i data-lucide="bot" class="h-5 w-5"></i>
+          </div>
+          <div class="space-y-2 flex-1">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400 uppercase">AI Interviewer</span>
+              <span id="question-difficulty-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-amber-100 text-amber-800">Intermediate</span>
+            </div>
+            <p id="current-question-text" class="text-slate-800 font-medium text-base leading-relaxed">
+              Can you explain the difference between a process and a thread in modern operating systems? How does context switching overhead differ between the two?
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Answer Input Area -->
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between">
+          <label class="text-xs font-bold uppercase text-slate-500">Your Answer (Text or Code)</label>
+          <span class="text-[11px] text-slate-400">Structured answers (STAR format) score higher</span>
+        </div>
+        <textarea id="candidate-answer-input" rows="6" placeholder="Type your answer here clearly and explain the underlying mechanics..." class="w-full p-4 border border-slate-300 rounded-2xl text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">A process is an independent program in execution with its own dedicated virtual address space and memory map. A thread is a lightweight execution stream that resides within a process and shares its address space, heap, and open file descriptors. Context switching between processes requires flushing and invalidating the TLB (Translation Lookaside Buffer) and changing memory page tables, making process context switches far more computationally expensive than thread context switches.</textarea>
+        
+        <div class="flex items-center justify-between pt-2">
+          <button onclick="populateSampleAnswer()" class="text-xs font-semibold text-blue-600 hover:text-blue-700">Load Strong Sample Answer</button>
+          <button onclick="submitAnswerAndEvaluate()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md text-sm transition flex items-center gap-2">
+            <span>Submit & Evaluate Answer</span>
+            <i data-lucide="send" class="h-4 w-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Answer Evaluation Feedback (Appears after submit) -->
+      <div id="eval-feedback" class="hidden bg-white p-6 md:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex items-center justify-between border-b pb-3">
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase">AI Evaluation Breakdown</span>
+            <h3 class="text-lg font-bold text-slate-900">Answer Score: <span id="eval-score" class="text-emerald-600">88 / 100</span></h3>
+          </div>
+          <button onclick="nextInterviewQuestion()" class="bg-slate-900 hover:bg-black text-white text-xs font-bold px-4 py-2 rounded-xl transition">Next Question &rarr;</button>
+        </div>
+        <p id="eval-feedback-text" class="text-xs md:text-sm text-slate-700 leading-relaxed">
+          Excellent explanation! You accurately distinguished address space isolation, PCB vs. TCB, and correctly noted the TLB cache flush penalty during process context switches.
+        </p>
+        <div class="bg-blue-50 p-4 rounded-xl border border-blue-100 text-xs space-y-1">
+          <span class="font-bold text-blue-900">Model Answer Reference:</span>
+          <p class="text-blue-800">
+            A process possesses its own independent virtual address space, files, and PCB. Threads within the same process share that memory space and heap. Consequently, thread switching requires saving only CPU registers and stack pointer, whereas process switching invalidates the MMU's TLB and reloads page directories, incurring major cache penalties.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. QUESTION BANK VIEW -->
+    <section id="view-questions" class="hidden p-4 md:p-8 max-w-6xl mx-auto space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-slate-900">Curated Question Bank</h2>
+          <p class="text-xs text-slate-500">200+ Core Computer Science & Behavioral interview problems</p>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="question-search" oninput="filterQuestions()" placeholder="Search questions or tags..." class="p-2.5 px-4 border border-slate-300 rounded-xl text-xs md:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none w-64">
+        </div>
+      </div>
+
+      <!-- Categories Pills -->
+      <div class="flex flex-wrap gap-2 text-xs font-semibold" id="category-pills">
+        <button onclick="filterCategory('All')" class="cat-pill active px-3.5 py-1.5 rounded-full bg-blue-600 text-white">All</button>
+        <button onclick="filterCategory('DSA')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">DSA</button>
+        <button onclick="filterCategory('OOP')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">OOP</button>
+        <button onclick="filterCategory('DBMS')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">DBMS</button>
+        <button onclick="filterCategory('OS')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">OS</button>
+        <button onclick="filterCategory('Computer Networks')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">Networks</button>
+        <button onclick="filterCategory('React')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">React / Web</button>
+        <button onclick="filterCategory('Behavioral')" class="cat-pill px-3.5 py-1.5 rounded-full bg-white text-slate-700 border hover:bg-slate-50">Behavioral</button>
+      </div>
+
+      <!-- Questions List -->
+      <div id="questions-container" class="space-y-4">
+        <!-- Rendered dynamically by script -->
+      </div>
+    </section>
+
+    <!-- 7. ROADMAP VIEW -->
+    <section id="view-roadmap" class="hidden p-4 md:p-8 max-w-5xl mx-auto space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-xs font-bold uppercase text-blue-600">Personalized Preparation Plan</span>
+          <h2 class="text-2xl font-bold text-slate-900">4-Week Mastery Roadmap</h2>
+        </div>
+        <div class="text-right">
+          <div class="text-xs text-slate-500 font-medium">Overall Progress</div>
+          <div class="text-xl font-extrabold text-blue-600" id="roadmap-pct">60% Complete</div>
+        </div>
+      </div>
+
+      <div class="space-y-6" id="roadmap-weeks-container">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white border-t border-slate-200 py-8 text-center text-xs text-slate-500">
+    <p>AI CareerPilot &mdash; Production Full-Stack AI Interview System (BTech CSE Capstone Project)</p>
+    <p class="mt-1">Built with Next.js 14, TypeScript, Prisma, PostgreSQL & OpenAI</p>
+  </footer>
+
+  <!-- EMBEDDED CLIENT-SIDE DATABASE & APPLICATION LOGIC -->
+  <script>
+    // ---------------------------------------------------------------------
+    // EMBEDDED CLIENT DATABASE (Seeded Questions, User, Roadmap)
+    // ---------------------------------------------------------------------
+    const DB = {
+      user: {
+        name: "Alex Morgan",
+        email: "demo@careerpilot.com",
+        role: "Full Stack Software Engineer",
+        experience: "Fresher (0-1 yrs)",
+        resumeAtsScore: 78,
+        interviewScore: 84
+      },
+      questions: [
+        { id: 1, category: "DSA", sub: "Arrays", difficulty: "Intermediate", q: "Explain the two-pointer technique on sorted arrays and why it operates in O(N) time with O(1) space.", answer: "The two-pointer technique initializes indices at opposite ends or in a fast/slow configuration, eliminating nested loops by relying on array sortedness.", tags: ["two-pointer", "arrays"] },
+        { id: 2, category: "DSA", sub: "Linked Lists", difficulty: "Intermediate", q: "How does Floyd's Tortoise and Hare algorithm detect loops and identify the cycle origin?", answer: "Slow moves 1 step; fast moves 2. When they meet, resetting one to head and moving both at 1 step locates the loop start.", tags: ["cycle-detection", "pointers"] },
+        { id: 3, category: "DSA", sub: "DP", difficulty: "Advanced", q: "What are overlapping subproblems and optimal substructure in dynamic programming?", answer: "Optimal substructure means optimal solutions to subproblems form the overall optimum; overlapping subproblems means identical states are calculated repeatedly.", tags: ["dp", "optimization"] },
+        { id: 4, category: "OOP", sub: "SOLID", difficulty: "Intermediate", q: "Explain the Dependency Inversion Principle (DIP) and how it facilitates unit testing.", answer: "DIP states high-level modules should depend on abstractions rather than concrete classes, enabling mock implementations in unit test suites.", tags: ["solid", "architecture"] },
+        { id: 5, category: "DBMS", sub: "Transactions", difficulty: "Intermediate", q: "Explain ACID properties and how Write-Ahead Logging (WAL) guarantees durability.", answer: "WAL logs all modifications to non-volatile disk before in-memory pages are flushed, allowing REDO and UNDO during recovery.", tags: ["acid", "wal", "dbms"] },
+        { id: 6, category: "OS", sub: "Processes", difficulty: "Intermediate", q: "Explain the differences between a process and a thread, focusing on context switching costs.", answer: "Processes possess isolated address spaces requiring TLB flushes on context switch. Threads share the same address space and heap.", tags: ["os", "concurrency"] },
+        { id: 7, category: "Computer Networks", sub: "TCP", difficulty: "Intermediate", q: "Explain the TCP 3-way handshake and why the TIME_WAIT state is necessary.", answer: "TIME_WAIT lasts 2*MSL to guarantee the final ACK was received and ensure lingering duplicate packets do not corrupt subsequent connections.", tags: ["tcp", "networking"] },
+        { id: 8, category: "React", sub: "Internals", difficulty: "Intermediate", q: "How does the React Fiber reconciler achieve interruptible rendering?", answer: "Fiber organizes work into discrete units within a singly linked tree, allowing React to pause, resume, and prioritize renders based on user interactions.", tags: ["react", "fiber"] },
+        { id: 9, category: "Behavioral", sub: "STAR", difficulty: "Intermediate", q: "Describe a project where you solved an unexpected technical bottleneck using the STAR method.", answer: "Detail the Situation, Task, Action (profiling, composite indexing, caching), and Result (measurable latency reduction).", tags: ["behavioral", "star-method"] }
+      ],
+      roadmap: [
+        {
+          week: 1,
+          theme: "Data Structures & Two-Pointer Foundations",
+          topics: [
+            { text: "Two-Pointer and Sliding Window Array Problems", done: true },
+            { text: "Linked List Reversal & Cycle Detection", done: true },
+            { text: "OOP Pillars & Clean Code Abstraction", done: true }
+          ]
+        },
+        {
+          week: 2,
+          theme: "Advanced Trees, DBMS & Indexing",
+          topics: [
+            { text: "Binary Tree BFS/DFS & Lowest Common Ancestor", done: true },
+            { text: "PostgreSQL B+Tree Indexing & Query Profiling", done: true },
+            { text: "ACID Isolation Levels & Write-Ahead Logging", done: false }
+          ]
+        },
+        {
+          week: 3,
+          theme: "System Design & Web Internals",
+          topics: [
+            { text: "Microservices, Load Balancing & Redis Caching", done: false },
+            { text: "React 18 Fiber Reconciliation & Hydration", done: false },
+            { text: "TCP/IP Handshake & HTTP/3 Protocol Mechanics", done: false }
+          ]
+        },
+        {
+          week: 4,
+          theme: "Mock Interviews & Behavioral Mastery",
+          topics: [
+            { text: "STAR Method Stories for Leadership & Conflict", done: false },
+            { text: "Timed AI Mock Technical Interviews", done: false },
+            { text: "Resume Polish & Quantitative Metric Formatting", done: false }
+          ]
+        }
+      ]
+    };
+
+    // ---------------------------------------------------------------------
+    // APP STATE & VIEW ROUTER
+    // ---------------------------------------------------------------------
+    let currentInterviewIndex = 0;
+    const interviewQuestions = [
+      {
+        q: "Can you explain the difference between a process and a thread in modern operating systems? How does context switching overhead differ between the two?",
+        diff: "Intermediate"
+      },
+      {
+        q: "What is the Virtual DOM in React, and how does the Fiber reconciler prevent frame drops during complex UI updates?",
+        diff: "Intermediate"
+      },
+      {
+        q: "Given a database table with 10 million rows, why is a B+ Tree index preferred over a Hash index for queries with range filters?",
+        diff: "Advanced"
+      }
+    ];
+
+    function navigateTo(viewId) {
+      const views = ['landing', 'dashboard', 'resume', 'jobs', 'interview', 'questions', 'roadmap'];
+      views.forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) el.classList.add('hidden');
+      });
+      const target = document.getElementById('view-' + viewId);
+      if (target) {
+        target.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      if (viewId === 'dashboard') initDashboardChart();
+      if (viewId === 'questions') renderQuestions(DB.questions);
+      if (viewId === 'roadmap') renderRoadmap();
+      lucide.createIcons();
+    }
+
+    // ---------------------------------------------------------------------
+    // DASHBOARD TRAJECTORY CHART
+    // ---------------------------------------------------------------------
+    let chartInstance = null;
+    function initDashboardChart() {
+      const ctx = document.getElementById('scoreChart');
+      if (!ctx) return;
+      if (chartInstance) chartInstance.destroy();
+
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Session 1', 'Session 2', 'Session 3', 'Session 4', 'Session 5'],
+          datasets: [{
+            label: 'Interview Readiness Score (%)',
+            data: [62, 70, 75, 81, 84],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.1)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 3,
+            pointBackgroundColor: '#2563eb',
+            pointRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { min: 40, max: 100, grid: { color: '#f1f5f9' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+    }
+
+    // ---------------------------------------------------------------------
+    // RESUME ANALYZER
+    // ---------------------------------------------------------------------
+    function simulateResumeUpload() {
+      alert("Resume 'Alex_Morgan_Resume.pdf' received. Triggering AI ATS Vector Analysis...");
+      analyzeResumeText();
+    }
+
+    function analyzeResumeText() {
+      const resEl = document.getElementById('resume-results');
+      resEl.classList.remove('hidden');
+      resEl.scrollIntoView({ behavior: 'smooth' });
+      alert("✅ Resume parsed and scored: 78/100 ATS Match.");
+    }
+
+    // ---------------------------------------------------------------------
+    // JOB DESCRIPTION ANALYZER
+    // ---------------------------------------------------------------------
+    function compareJobDescription() {
+      const resultEl = document.getElementById('jd-result');
+      resultEl.classList.remove('hidden');
+      resultEl.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // ---------------------------------------------------------------------
+    // MOCK INTERVIEW SESSION
+    // ---------------------------------------------------------------------
+    function populateSampleAnswer() {
+      document.getElementById('candidate-answer-input').value = 
+        "A process is an isolated execution space containing its own memory space and file descriptors, whereas threads within the process share that memory space and heap. Consequently, context switching between processes requires invalidating the MMU's TLB caches and changing memory page directories, making it far more expensive than thread context switches.";
+    }
+
+    function submitAnswerAndEvaluate() {
+      const ans = document.getElementById('candidate-answer-input').value.trim();
+      if (!ans) {
+        alert("Please enter an answer first!");
+        return;
+      }
+      const evalBox = document.getElementById('eval-feedback');
+      evalBox.classList.remove('hidden');
+      evalBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function nextInterviewQuestion() {
+      currentInterviewIndex = (currentInterviewIndex + 1) % interviewQuestions.length;
+      const qObj = interviewQuestions[currentInterviewIndex];
+      document.getElementById('current-question-text').innerText = qObj.q;
+      document.getElementById('question-difficulty-badge').innerText = qObj.diff;
+      document.getElementById('interview-progress-pill').innerText = `Question ${currentInterviewIndex + 1} of 3`;
+      document.getElementById('candidate-answer-input').value = "";
+      document.getElementById('eval-feedback').classList.add('hidden');
+    }
+
+    // ---------------------------------------------------------------------
+    // QUESTION BANK RENDERER
+    // ---------------------------------------------------------------------
+    function renderQuestions(list) {
+      const c = document.getElementById('questions-container');
+      if (!c) return;
+      c.innerHTML = list.map(item => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700">${item.category}</span>
+              <span class="text-xs text-slate-500 font-medium">${item.sub}</span>
+            </div>
+            <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 text-slate-700">${item.difficulty}</span>
+          </div>
+          <p class="font-semibold text-slate-900 text-sm md:text-base">${item.q}</p>
+          <details class="text-xs text-slate-600 bg-slate-50 p-3 rounded-xl border border-slate-200">
+            <summary class="font-bold text-blue-600 cursor-pointer">View Model Answer</summary>
+            <p class="mt-2 leading-relaxed text-slate-700">${item.answer}</p>
+          </details>
+        </div>
+      `).join('');
+    }
+
+    function filterCategory(cat) {
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.classList.remove('bg-blue-600', 'text-white');
+        b.classList.add('bg-white', 'text-slate-700');
+      });
+      event.target.classList.add('bg-blue-600', 'text-white');
+      event.target.classList.remove('bg-white', 'text-slate-700');
+
+      if (cat === 'All') {
+        renderQuestions(DB.questions);
+      } else {
+        const filtered = DB.questions.filter(q => q.category.toLowerCase().includes(cat.toLowerCase()));
+        renderQuestions(filtered);
+      }
+    }
+
+    function filterQuestions() {
+      const term = document.getElementById('question-search').value.toLowerCase();
+      const filtered = DB.questions.filter(q => 
+        q.q.toLowerCase().includes(term) || q.tags.some(t => t.includes(term))
+      );
+      renderQuestions(filtered);
+    }
+
+    // ---------------------------------------------------------------------
+    // ROADMAP RENDERER
+    // ---------------------------------------------------------------------
+    function renderRoadmap() {
+      const c = document.getElementById('roadmap-weeks-container');
+      if (!c) return;
+      c.innerHTML = DB.roadmap.map(w => `
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div class="flex items-center justify-between border-b pb-3">
+            <h3 class="font-bold text-slate-900 text-base">Week ${w.week}: ${w.theme}</h3>
+            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full ${w.topics.every(t => t.done) ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">
+              ${w.topics.filter(t => t.done).length} / ${w.topics.length} Completed
+            </span>
+          </div>
+          <div class="space-y-2">
+            ${w.topics.map((t, idx) => `
+              <label class="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleRoadmapItem(${w.week}, ${idx})" class="h-4 w-4 rounded text-blue-600 accent-blue-600">
+                <span class="text-xs md:text-sm text-slate-700 ${t.done ? 'line-through text-slate-400 font-normal' : 'font-medium'}">${t.text}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleRoadmapItem(weekNum, topicIdx) {
+      const w = DB.roadmap.find(x => x.week === weekNum);
+      if (w && w.topics[topicIdx]) {
+        w.topics[topicIdx].done = !w.topics[topicIdx].done;
+        renderRoadmap();
+      }
+    }
+
+    // Initialize icons on first load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
