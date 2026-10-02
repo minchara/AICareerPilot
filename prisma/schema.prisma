@@ -1,0 +1,233 @@
+// This is your Prisma schema file
+// Learn more: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User & Authentication
+// ============================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  profile       Profile?
+  resumes       Resume[]
+  jobDescriptions JobDescription[]
+  interviews    Interview[]
+  roadmaps      Roadmap[]
+  progress      UserProgress?
+  bookmarks     QuestionBookmark[]
+
+  @@map("users")
+}
+
+model Profile {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  targetRole      String   @default("")
+  experienceLevel String   @default("fresher")
+  bio             String   @default("")
+  skills          String[] @default([])
+  
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// ============================================
+// Resume & Job Description
+// ============================================
+
+model Resume {
+  id              String   @id @default(cuid())
+  userId          String
+  fileName        String
+  fileSize        Int
+  extractedText   String
+  analysisResult  Json?
+  atsScore        Int?
+  skills          String[] @default([])
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("resumes")
+}
+
+model JobDescription {
+  id              String   @id @default(cuid())
+  userId          String
+  title           String
+  company         String   @default("")
+  description     String
+  analysisResult  Json?
+  matchScore      Int?
+  createdAt       DateTime @default(now())
+
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("job_descriptions")
+}
+
+// ============================================
+// Interview System
+// ============================================
+
+model Interview {
+  id              String            @id @default(cuid())
+  userId          String
+  type            String            // technical, behavioral, hr, coding, mixed
+  difficulty      String            // beginner, intermediate, advanced
+  targetRole      String
+  status          String            @default("in_progress") // in_progress, completed, abandoned
+  totalQuestions  Int
+  currentQuestion Int               @default(0)
+  overallScore    Int?
+  report          Json?
+  jobDescription  String?
+  createdAt       DateTime          @default(now())
+  completedAt     DateTime?
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions       InterviewQuestion[]
+
+  @@index([userId])
+  @@index([status])
+  @@map("interviews")
+}
+
+model InterviewQuestion {
+  id              String           @id @default(cuid())
+  interviewId     String
+  questionText    String
+  questionType    String           // technical, behavioral, hr, coding
+  difficulty      String
+  orderIndex      Int
+  codeTemplate    String?
+  constraints     String?
+  examples        String?
+
+  interview       Interview        @relation(fields: [interviewId], references: [id], onDelete: Cascade)
+  answer          InterviewAnswer?
+
+  @@index([interviewId])
+  @@map("interview_questions")
+}
+
+model InterviewAnswer {
+  id              String            @id @default(cuid())
+  questionId      String            @unique
+  answerText      String
+  codeAnswer      String?
+  language        String?
+  evaluation      Json?
+  score           Int?
+  createdAt       DateTime          @default(now())
+
+  question        InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@map("interview_answers")
+}
+
+// ============================================
+// Question Bank
+// ============================================
+
+model Question {
+  id              String   @id @default(cuid())
+  category        String
+  subcategory     String   @default("")
+  difficulty      String   // beginner, intermediate, advanced
+  questionText    String
+  expectedConcepts String[] @default([])
+  modelAnswer     String?
+  tags            String[] @default([])
+  createdAt       DateTime @default(now())
+
+  bookmarks       QuestionBookmark[]
+
+  @@index([category])
+  @@index([difficulty])
+  @@map("questions")
+}
+
+model QuestionBookmark {
+  id          String   @id @default(cuid())
+  userId      String
+  questionId  String
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, questionId])
+  @@map("question_bookmarks")
+}
+
+// ============================================
+// Roadmap
+// ============================================
+
+model Roadmap {
+  id          String       @id @default(cuid())
+  userId      String
+  targetRole  String
+  totalWeeks  Int
+  createdAt   DateTime     @default(now())
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       RoadmapItem[]
+
+  @@index([userId])
+  @@map("roadmaps")
+}
+
+model RoadmapItem {
+  id          String   @id @default(cuid())
+  roadmapId   String
+  week        Int
+  topic       String
+  description String
+  resources   String[] @default([])
+  completed   Boolean  @default(false)
+
+  roadmap     Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  @@index([roadmapId])
+  @@map("roadmap_items")
+}
+
+// ============================================
+// Progress Tracking
+// ============================================
+
+model UserProgress {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  totalInterviews   Int      @default(0)
+  avgScore          Float    @default(0)
+  bestScore         Int      @default(0)
+  questionsAttempted Int     @default(0)
+  questionsCompleted Int     @default(0)
+  topicScores       Json?    // { "dsa": 75, "oop": 80, ... }
+  updatedAt         DateTime @updatedAt
+
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_progress")
+}
